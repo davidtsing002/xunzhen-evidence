@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>循真 — 消费健康循证加速器</title>
+<style>
+/* ===== DESIGN SYSTEM ===== */
+:root {
+  --herb-deep: #1a4a3a;
+  --herb: #2d7a5f;
+  --herb-light: #4a9e78;
+  --herb-glow: #6dbf97;
+  --herb-ghost: #e8f5ee;
+  --amber-deep: #8a5e1a;
+  --amber: #c4842a;
+  --amber-light: #f0a84c;
+  --amber-ghost: #faf0e0;
+  --slate-900: #1a1d23;
+  --slate-800: #282c35;
+  --slate-700: #3d4250;
+  --slate-600: #575d6e;
+  --slate-500: #717891;
+  --slate-400: #9aa0b5;
+  --slate-300: #c5c9d8;
+  --slate-200: #e0e3eb;
+  --slate-100: #f0f2f7;
+  --slate-50: #f7f8fb;
+  --white: #ffffff;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, "PingFang SC", "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+  color: var(--slate-800);
+  background: var(--white);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ===== FONTS (distinctive choices) ===== */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+.font-serif { font-family: "Noto Serif SC", "STSong", "SimSun", serif; }
+.font-sans { font-family: "DM Sans", "PingFang SC", "Noto Sans SC", sans-serif; }
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideRight {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  10% { transform: translate(-2px, -2px); }
+  30% { transform: translate(2px, 1px); }
+  50% { transform: translate(-1px, 2px); }
+  70% { transform: translate(1px, -1px); }
+  100% { transform: translate(0, 0); }
+}
+
+.anim-fade-up {
+  animation: fadeUp 0.8s ease both;
+  animation-delay: var(--delay, 0s);
+}
+.anim-fade-in {
+  animation: fadeIn 0.6s ease both;
+  animation-delay: var(--delay, 0s);
+}
+.anim-slide-right {
+  animation: slideRight 0.7s ease both;
+  animation-delay: var(--delay, 0s);
+}
+
+/* ===== GRAIN OVERLAY ===== */
+.grain-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 8s steps(10) infinite;
+}
+
+/* ===== NAV ===== */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--slate-200);
+  transition: all 0.3s ease;
+}
+nav.scrolled {
+  padding: 10px 32px;
+  background: rgba(255,255,255,0.95);
+}
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.nav-logo {
+  width: 36px; height: 36px;
+  background: var(--herb-deep);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  font-size: 18px;
+  font-weight: 700;
+  font-family: "Noto Serif SC", serif;
+}
+.nav-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--herb-deep);
+  letter-spacing: -0.02em;
+}
+.nav-links {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+}
+.nav-links a {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--slate-600);
+  text-decoration: none;
+  transition: color 0.2s;
+  font-family: "DM Sans", "PingFang SC", sans-serif;
+}
+.nav-links a:hover { color: var(--herb); }
+.nav-cta {
+  padding: 8px 20px;
+  background: var(--herb);
+  color: var(--white);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+  font-family: "DM Sans", sans-serif;
+}
+.nav-cta:hover {
+  background: var(--herb-deep);
+  transform: translateY(-1px);
+}
+
+/* ===== HERO ===== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(170deg, var(--herb-ghost) 0%, var(--white) 40%, var(--amber-ghost) 100%);
+}
+.hero-bg-pattern {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  opacity: 0.08;
+  background-image:
+    radial-gradient(circle at 20% 30%, var(--herb-light) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, var(--amber-light) 0%, transparent 50%);
+}
+.hero-herb-deco {
+  position: absolute;
+  opacity: 0.06;
+  font-size: 300px;
+  font-family: "Noto Serif SC", serif;
+  color: var(--herb);
+  line-height: 1;
+}
+.hero-herb-deco.left { top: 10%; left: -5%; transform: rotate(-15deg); animation: float 6s ease-in-out infinite; }
+.hero-herb-deco.right { bottom: 5%; right: -5%; transform: rotate(20deg); animation: float 8s ease-in-out infinite 1s; }
+.hero-content {
+  max-width: 800px;
+  text-align: center;
+  padding: 120px 40px 80px;
+  position: relative;
+  z-index: 1;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: var(--herb-ghost);
+  border: 1px solid var(--herb-light);
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--herb);
+  margin-bottom: 28px;
+}
+.hero-badge-dot {
+  width: 8px; height: 8px;
+  background: var(--herb-glow);
+  border-radius: 50%;
+  animation: pulse 2s ease infinite;
+}
+.hero-title {
+  font-size: 56px;
+  font-weight: 700;
+  color: var(--herb-deep);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  margin-bottom: 24px;
+}
+.hero-title-serif {
+  font-family: "Noto Serif SC", serif;
+  display: block;
+  font-size: 68px;
+  margin-bottom: 8px;
+  color: var(--herb-deep);
+}
+.hero-title-accent {
+  color: var(--amber);
+  font-family: "Noto Serif SC", serif;
+}
+.hero-desc {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--slate-600);
+  line-height: 1.8;
+  max-width: 600px;
+  margin: 0 auto 40px;
+}
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-primary {
+  padding: 14px 32px;
+  background: var(--herb);
+  color: var(--white);
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s;
+  border: none;
+  cursor: pointer;
+  font-family: "DM Sans", sans-serif;
+}
+.btn-primary:hover { background: var(--herb-deep); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,74,58,0.25); }
+.btn-secondary {
+  padding: 14px 32px;
+  background: var(--white);
+  color: var(--herb-deep);
+  border: 1.5px solid var(--slate-300);
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s;
+  cursor: pointer;
+  font-family: "DM Sans", sans-serif;
+}
+.btn-secondary:hover { border-color: var(--herb-light); color: var(--herb); transform: translateY(-2px); }
+.hero-metrics {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  margin-top: 56px;
+  flex-wrap: wrap;
+}
+.hero-metric {
+  text-align: center;
+}
+.hero-metric-val {
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--herb);
+  font-family: "DM Sans", sans-serif;
+  letter-spacing: -0.02em;
+}
+.hero-metric-label {
+  font-size: 14px;
+  color: var(--slate-500);
+  margin-top: 4px;
+}
+
+/* ===== SECTION COMMON ===== */
+section {
+  padding: 100px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--herb);
+  padding: 4px 12px;
+  background: var(--herb-ghost);
+  border-radius: 100px;
+  margin-bottom: 16px;
+}
+.section-title {
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--slate-900);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+}
+.section-title-serif {
+  font-family: "Noto Serif SC", serif;
+}
+.section-desc {
+  font-size: 17px;
+  color: var(--slate-600);
+  line-height: 1.7;
+  max-width: 560px;
+}
+
+/* ===== PROBLEM SECTION ===== */
+.problem {
+  background: var(--slate-900);
+  color: var(--white);
+  max-width: none;
+  padding: 100px 0;
+}
+.problem-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+.problem-title {
+  font-size: 38px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 24px;
+  letter-spacing: -0.02em;
+}
+.problem-title-accent {
+  color: var(--amber-light);
+  font-family: "Noto Serif SC", serif;
+}
+.problem-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 48px;
+}
+.problem-card {
+  padding: 32px;
+  background: var(--slate-800);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: all 0.3s;
+}
+.problem-card:hover {
+  background: var(--slate-700);
+  border-color: rgba(255,255,255,0.15);
+  transform: translateY(-4px);
+}
+.problem-card-icon {
+  width: 48px; height: 48px;
+  background: rgba(196,132,42,0.15);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: var(--amber-light);
+}
+.problem-card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 12px;
+}
+.problem-card-text {
+  font-size: 15px;
+  color: var(--slate-400);
+  line-height: 1.7;
+}
+.problem-stat-bar {
+  display: flex;
+  gap: 32px;
+  margin-top: 48px;
+  padding: 28px 32px;
+  background: rgba(196,132,42,0.08);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(196,132,42,0.15);
+  flex-wrap: wrap;
+}
+.problem-stat {
+  flex: 1;
+  min-width: 160px;
+}
+.problem-stat-val {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--amber-light);
+  font-family: "DM Sans", sans-serif;
+}
+.problem-stat-label {
+  font-size: 14px;
+  color: var(--slate-400);
+  margin-top: 4px;
+}
+
+/* ===== SOLUTION SECTION ===== */
+.solution-hero {
+  text-align: center;
+  margin-bottom: 64px;
+}
+.solution-features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+.solution-feature {
+  padding: 36px 28px;
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--slate-200);
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.solution-feature::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: var(--herb);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+.solution-feature:hover::before { transform: scaleX(1); }
+.solution-feature:hover {
+  border-color: var(--herb-light);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(26,74,58,0.08);
+}
+.solution-feature-icon {
+  width: 56px; height: 56px;
+  background: var(--herb-ghost);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: var(--herb);
+  margin-bottom: 20px;
+}
+.solution-feature-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--slate-900);
+  margin-bottom: 12px;
+}
+.solution-feature-text {
+  font-size: 15px;
+  color: var(--slate-600);
+  line-height: 1.7;
+}
+
+/* ===== DUAL TRACK SECTION ===== */
+.dual-track {
+  padding: 100px 0;
+  max-width: none;
+  background: var(--slate-50);
+}
+.dual-track-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+.dual-track-title {
+  font-size: 38px;
+  font-weight: 700;
+  color: var(--slate-900);
+  margin-bottom: 16px;
+}
+.dual-track-desc {
+  font-size: 17px;
+  color: var(--slate-600);
+  margin-bottom: 48px;
+  max-width: 560px;
+}
+.track-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+.track-card {
+  padding: 40px 32px;
+  border-radius: var(--radius-xl);
+  position: relative;
+  overflow: hidden;
+}
+.track-register {
+  background: linear-gradient(135deg, var(--herb-deep), var(--herb));
+  color: var(--white);
+}
+.track-register::after {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 200px; height: 200px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 50%;
+}
+.track-market {
+  background: var(--white);
+  border: 2px solid var(--amber);
+  color: var(--slate-800);
+}
+.track-market::after {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 200px; height: 200px;
+  background: rgba(196,132,42,0.06);
+  border-radius: 50%;
+}
+.track-badge {
+  display: inline-flex;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  margin-bottom: 20px;
+}
+.track-register .track-badge {
+  background: rgba(255,255,255,0.15);
+  color: var(--herb-glow);
+}
+.track-market .track-badge {
+  background: var(--amber-ghost);
+  color: var(--amber-deep);
+}
+.track-card-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  font-family: "Noto Serif SC", serif;
+}
+.track-register .track-card-title { color: var(--white); }
+.track-market .track-card-title { color: var(--amber-deep); }
+.track-card-desc {
+  font-size: 15px;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+.track-register .track-card-desc { color: rgba(255,255,255,0.7); }
+.track-market .track-card-desc { color: var(--slate-600); }
+.track-items {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.track-items li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.track-register .track-items li { color: rgba(255,255,255,0.85); }
+.track-market .track-items li { color: var(--slate-700); }
+.track-items li .icon {
+  width: 24px; height: 24px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+.track-register .track-items li .icon { background: rgba(255,255,255,0.1); color: var(--herb-glow); }
+.track-market .track-items li .icon { background: var(--amber-ghost); color: var(--amber); }
+
+/* ===== HOW IT WORKS ===== */
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 48px;
+  position: relative;
+}
+.steps::before {
+  content: '';
+  position: absolute;
+  top: 44px;
+  left: 44px;
+  width: 2px;
+  height: calc(100% - 88px);
+  background: linear-gradient(to bottom, var(--herb-light), var(--amber));
+}
+.step {
+  display: flex;
+  gap: 32px;
+  padding: 32px 0;
+  position: relative;
+}
+.step-num {
+  width: 48px; height: 48px;
+  background: var(--white);
+  border: 2px solid var(--herb-light);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--herb);
+  font-family: "DM Sans", sans-serif;
+  z-index: 1;
+  flex-shrink: 0;
+}
+.step-content {
+  flex: 1;
+  padding-left: 8px;
+}
+.step-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--slate-900);
+  margin-bottom: 8px;
+}
+.step-text {
+  font-size: 15px;
+  color: var(--slate-600);
+  line-height: 1.7;
+}
+
+/* ===== AI SECTION ===== */
+.ai-section {
+  padding: 100px 0;
+  max-width: none;
+  background: var(--herb-ghost);
+}
+.ai-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+.ai-left {}
+.ai-title {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--herb-deep);
+  margin-bottom: 20px;
+  line-height: 1.25;
+}
+.ai-desc {
+  font-size: 16px;
+  color: var(--slate-600);
+  line-height: 1.7;
+  margin-bottom: 32px;
+}
+.ai-demo {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--slate-200);
+  padding: 28px;
+  font-family: "DM Sans", "PingFang SC", sans-serif;
+}
+.ai-demo-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.ai-demo-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+}
+.ai-demo-dot.red { background: #e24b4a; }
+.ai-demo-dot.yellow { background: #f0a84c; }
+.ai-demo-dot.green { background: var(--herb-light); }
+.ai-demo-body {
+  font-size: 13px;
+  line-height: 1.7;
+}
+.ai-demo-prompt {
+  padding: 12px 16px;
+  background: var(--herb-ghost);
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+  color: var(--herb);
+  font-weight: 500;
+}
+.ai-demo-response {
+  color: var(--slate-700);
+}
+.ai-demo-response .keyword {
+  color: var(--amber);
+  font-weight: 600;
+}
+.ai-demo-response .output {
+  padding: 8px 12px;
+  background: var(--slate-100);
+  border-radius: var(--radius-sm);
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--slate-600);
+}
+.ai-features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.ai-feature-item {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  background: var(--white);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--slate-200);
+  transition: all 0.2s;
+}
+.ai-feature-item:hover {
+  border-color: var(--herb-light);
+  transform: translateX(8px);
+}
+.ai-feature-icon {
+  width: 40px; height: 40px;
+  background: var(--herb-ghost);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: var(--herb);
+  flex-shrink: 0;
+}
+.ai-feature-text {
+  font-size: 15px;
+  color: var(--slate-700);
+  font-weight: 500;
+}
+
+/* ===== PRICING ===== */
+.pricing-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 48px;
+}
+.pricing-card {
+  padding: 36px 28px;
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  border: 2px solid var(--slate-200);
+  text-align: center;
+  transition: all 0.3s;
+  position: relative;
+}
+.pricing-card.popular {
+  border-color: var(--herb);
+  background: linear-gradient(to bottom, var(--herb-ghost), var(--white));
+}
+.pricing-card.popular::before {
+  content: '推荐';
+  position: absolute;
+  top: -12px; left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 16px;
+  background: var(--herb);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 100px;
+}
+.pricing-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(26,74,58,0.1);
+}
+.pricing-tier {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--herb);
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
+}
+.pricing-price {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--slate-900);
+  font-family: "DM Sans", sans-serif;
+  letter-spacing: -0.03em;
+}
+.pricing-price-unit {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--slate-500);
+}
+.pricing-desc {
+  font-size: 14px;
+  color: var(--slate-500);
+  margin: 16px 0 28px;
+  line-height: 1.5;
+}
+.pricing-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+.pricing-features li {
+  font-size: 14px;
+  color: var(--slate-700);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pricing-features li .check {
+  color: var(--herb);
+  font-size: 16px;
+}
+.pricing-btn {
+  width: 100%;
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: "DM Sans", sans-serif;
+}
+.pricing-btn.primary {
+  background: var(--herb);
+  color: var(--white);
+  border: none;
+}
+.pricing-btn.primary:hover { background: var(--herb-deep); }
+.pricing-btn.outline {
+  background: var(--white);
+  color: var(--herb);
+  border: 2px solid var(--herb-light);
+}
+.pricing-btn.outline:hover { background: var(--herb-ghost); }
+
+/* ===== CTA SECTION ===== */
+.cta-section {
+  padding: 100px 0;
+  max-width: none;
+  background: linear-gradient(135deg, var(--herb-deep) 0%, var(--herb) 50%, #1a5a4a 100%);
+  position: relative;
+  overflow: hidden;
+}
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -100px;
+  width: 400px; height: 400px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 50%;
+}
+.cta-section::after {
+  content: '';
+  position: absolute;
+  bottom: -150px; left: -100px;
+  width: 300px; height: 300px;
+  background: rgba(196,132,42,0.08);
+  border-radius: 50%;
+}
+.cta-inner {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 0 40px;
+  position: relative;
+  z-index: 1;
+}
+.cta-title {
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 20px;
+  line-height: 1.2;
+  font-family: "Noto Serif SC", serif;
+}
+.cta-desc {
+  font-size: 17px;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+.cta-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-white {
+  padding: 14px 32px;
+  background: var(--white);
+  color: var(--herb-deep);
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s;
+  border: none;
+  cursor: pointer;
+  font-family: "DM Sans", sans-serif;
+}
+.btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+.btn-ghost {
+  padding: 14px 32px;
+  background: transparent;
+  color: var(--white);
+  border: 1.5px solid rgba(255,255,255,0.3);
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s;
+  cursor: pointer;
+  font-family: "DM Sans", sans-serif;
+}
+.btn-ghost:hover { border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.05); }
+
+/* ===== FOOTER ===== */
+footer {
+  padding: 60px 40px 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-top: 1px solid var(--slate-200);
+}
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.footer-logo {
+  width: 32px; height: 32px;
+  background: var(--herb-deep);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  font-size: 16px;
+  font-weight: 700;
+  font-family: "Noto Serif SC", serif;
+}
+.footer-brand-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--herb-deep);
+}
+.footer-links {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+.footer-col {}
+.footer-col-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--slate-900);
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+.footer-col a {
+  display: block;
+  font-size: 14px;
+  color: var(--slate-500);
+  text-decoration: none;
+  margin-bottom: 8px;
+  transition: color 0.2s;
+}
+.footer-col a:hover { color: var(--herb); }
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 24px;
+  border-top: 1px solid var(--slate-200);
+  font-size: 13px;
+  color: var(--slate-400);
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .problem-grid { grid-template-columns: 1fr; }
+  .solution-features { grid-template-columns: 1fr; }
+  .track-comparison { grid-template-columns: 1fr; }
+  .pricing-cards { grid-template-columns: 1fr; }
+  .ai-inner { grid-template-columns: 1fr; }
+  .hero-title { font-size: 40px; }
+  .hero-title-serif { font-size: 48px; }
+  .hero-metrics { gap: 24px; }
+  .section-title { font-size: 30px; }
+  .problem-title { font-size: 30px; }
+  .dual-track-title { font-size: 30px; }
+  .cta-title { font-size: 32px; }
+  .nav-links { display: none; }
+}
+@media (max-width: 600px) {
+  section { padding: 60px 20px; }
+  .hero-content { padding: 100px 20px 60px; }
+  .hero-title { font-size: 32px; }
+  .hero-title-serif { font-size: 38px; }
+  .hero-desc { font-size: 16px; }
+  .hero-actions { flex-direction: column; align-items: center; }
+  .hero-metrics { flex-direction: column; gap: 16px; }
+  .problem-stat-bar { flex-direction: column; }
+  .steps::before { display: none; }
+  .step { padding: 16px 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="grain-overlay"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-brand">
+    <div class="nav-logo">循</div>
+    <div class="nav-name font-serif">循真</div>
+  </div>
+  <div class="nav-links font-sans">
+    <a href="#problem">痛点</a>
+    <a href="#solution">方案</a>
+    <a href="#dual-track">双轨合规</a>
+    <a href="#ai">AI引擎</a>
+    <a href="#pricing">定价</a>
+  </div>
+  <a href="#cta" class="nav-cta font-sans">开始验证</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg-pattern"></div>
+  <div class="hero-herb-deco left font-serif">本草</div>
+  <div class="hero-herb-deco right font-serif">药食</div>
+  <div class="hero-content">
+    <div class="hero-badge font-sans anim-fade-up" style="--delay: 0.1s">
+      <div class="hero-badge-dot"></div>
+      消费健康循证加速器 · 保健品与药食同源
+    </div>
+    <h1 class="hero-title anim-fade-up" style="--delay: 0.2s">
+      <span class="hero-title-serif">让功效从<span class="hero-title-accent">经验宣称</span></span>
+      走向<span class="hero-title-accent" style="color: var(--herb);">科学实证</span>
+    </h1>
+    <p class="hero-desc anim-fade-up" style="--delay: 0.3s">
+      循真是中国首个专为保健品与药食同源品牌打造的循证研究SaaS平台。<br>
+      AI驱动方案设计，双轨合规引擎，微信生态社区——从构想到证据，最快只需一次会话。
+    </p>
+    <div class="hero-actions anim-fade-up" style="--delay: 0.4s">
+      <button class="btn-primary font-sans">7天免费试用</button>
+      <button class="btn-secondary font-sans">查看方案示例</button>
+    </div>
+    <div class="hero-metrics anim-fade-up" style="--delay: 0.5s font-sans">
+      <div class="hero-metric">
+        <div class="hero-metric-val">3X</div>
+        <div class="hero-metric-label">更快研究启动</div>
+      </div>
+      <div class="hero-metric">
+        <div class="hero-metric-val">10X</div>
+        <div class="hero-metric-label">更快受试者招募</div>
+      </div>
+      <div class="hero-metric">
+        <div class="hero-metric-val">50%+</div>
+        <div class="hero-metric-label">成本降低</div>
+      </div>
+      <div class="hero-metric">
+        <div class="hero-metric-val">>90%</div>
+        <div class="hero-metric-label">参与者依从率</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem" id="problem">
+  <div class="problem-inner">
+    <div class="section-tag font-sans anim-fade-up" style="--delay: 0s; background: rgba(196,132,42,0.15); color: var(--amber-light);">行业痛点</div>
+    <h2 class="problem-title anim-fade-up" style="--delay: 0.1s">
+      千亿市场，<span class="problem-title-accent font-serif">功效难证</span>
+    </h2>
+    <p class="anim-fade-up" style="--delay: 0.15s; font-size: 17px; color: var(--slate-400); max-width: 560px; line-height: 1.7;">
+      中国功能性食品与保健品市场规模超千亿，但绝大部分产品功效停留在"经验宣称"——想做循证验证，却找不到可负担的平台。
+    </p>
+    <div class="problem-grid">
+      <div class="problem-card anim-fade-up" style="--delay: 0.2s">
+        <div class="problem-card-icon">💰</div>
+        <div class="problem-card-title">传统验证成本过高</div>
+        <div class="problem-card-text">CRO项目制收费¥5-20万/项目，中小品牌根本无法负担。金至检测/华测检测等线下服务动辄数月周期。</div>
+      </div>
+      <div class="problem-card anim-fade-up" style="--delay: 0.25s">
+        <div class="problem-card-icon">⏳</div>
+        <div class="problem-card-title">验证周期太长</div>
+        <div class="problem-card-text">从方案设计到伦理审查到数据采集，传统流程需3-12个月。市场机会稍纵即逝，品牌等不起。</div>
+      </div>
+      <div class="problem-card anim-fade-up" style="--delay: 0.3s">
+        <div class="problem-card-icon">🔍</div>
+        <div class="problem-card-title">数字平台缺失</div>
+        <div class="problem-card-text">国内临床试验数字化平台100%聚焦大药企GCP合规赛道，消费健康品牌找不到专属的轻量级循证工具。</div>
+      </div>
+    </div>
+    <div class="problem-stat-bar anim-fade-up" style="--delay: 0.35s font-sans">
+      <div class="problem-stat">
+        <div class="problem-stat-val">¥4000亿+</div>
+        <div class="problem-stat-label">中国保健品市场规模</div>
+      </div>
+      <div class="problem-stat">
+        <div class="problem-stat-val">0</div>
+        <div class="problem-stat-label">消费健康专属循证平台</div>
+      </div>
+      <div class="problem-stat">
+        <div class="problem-stat-val">3-12月</div>
+        <div class="problem-stat-label">传统验证周期</div>
+      </div>
+      <div class="problem-stat">
+        <div class="problem-stat-val">¥5-20万</div>
+        <div class="problem-stat-label">CRO单项目成本</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section id="solution">
+  <div class="solution-hero anim-fade-up">
+    <div class="section-tag font-sans">解决方案</div>
+    <h2 class="section-title">
+      <span class="section-title-serif font-serif">循真</span>六大核心能力
+    </h2>
+    <p class="section-desc" style="max-width: none; margin: 0 auto;">
+      专为中国保健品与药食同源品牌设计的全流程循证研究工具，从AI方案生成到微信生态招募，一条路径解决所有痛点。
+    </p>
+  </div>
+  <div class="solution-features">
+    <div class="solution-feature anim-fade-up" style="--delay: 0.1s">
+      <div class="solution-feature-icon">🤖</div>
+      <div class="solution-feature-title">AI方案生成</div>
+      <div class="solution-feature-text">输入功能声称+主要成分+目标人群，AI即刻生成符合NMPA/蓝帽子要求的研究方案。几分钟替代数月。</div>
+    </div>
+    <div class="solution-feature anim-fade-up" style="--delay: 0.15s">
+      <div class="solution-feature-icon">⚖️</div>
+      <div class="solution-feature-title">双轨合规引擎</div>
+      <div class="solution-feature-text">蓝帽子注册轨（NMPA审评要求）+ 市场循证轨（营销证据生成）。同一平台，两种合规路径。</div>
+    </div>
+    <div class="solution-feature anim-fade-up" style="--delay: 0.2s">
+      <div class="solution-feature-icon">💬</div>
+      <div class="solution-feature-title">微信生态社区</div>
+      <div class="solution-feature-text">小程序参与+社群招募+公众号触达。参与者在家即可参与研究，完成即获个人健康洞察回馈。</div>
+    </div>
+    <div class="solution-feature anim-fade-up" style="--delay: 0.25s">
+      <div class="solution-feature-icon">⌚</div>
+      <div class="solution-feature-title">中国可穿戴生态</div>
+      <div class="solution-feature-text">集成华为手环/Watch D血压+小米手环+Apple Watch。华为医疗级可穿戴是中国独有优势数据源。</div>
+    </div>
+    <div class="solution-feature anim-fade-up" style="--delay: 0.3s">
+      <div class="solution-feature-icon">🏠</div>
+      <div class="solution-feature-title">混合式执行</div>
+      <div class="solution-feature-text">线上数据采集+对接上门采血/检测网络（金域医学等）。平台是调度者而非执行者，轻量高效。</div>
+    </div>
+    <div class="solution-feature anim-fade-up" style="--delay: 0.35s">
+      <div class="solution-feature-icon">📊</div>
+      <div class="solution-feature-title">CRO-Lite服务</div>
+      <div class="solution-feature-text">¥500/月自助 + ¥3000/研究辅助 + ¥15000/研究托管。SaaS自助+轻服务分层，"扶上马送一程"。</div>
+    </div>
+  </div>
+</section>
+
+<!-- DUAL TRACK -->
+<section class="dual-track" id="dual-track">
+  <div class="dual-track-inner">
+    <div class="section-tag font-sans anim-fade-up" style="--delay: 0s">核心创新</div>
+    <h2 class="dual-track-title anim-fade-up" style="--delay: 0.1s">
+      <span class="font-serif">双轨合规引擎</span> — 中国独有的本土化创新
+    </h2>
+    <p class="dual-track-desc anim-fade-up" style="--delay: 0.15s">
+      中国保健食品有独特的监管双轨制。循真同时支持两种合规路径，是Alethios模式在中国最大的本土化创新点。
+    </p>
+    <div class="track-comparison">
+      <div class="track-card track-register anim-fade-up" style="--delay: 0.2s">
+        <div class="track-badge">注册合规轨</div>
+        <h3 class="track-card-title font-serif">蓝帽子注册轨</h3>
+        <p class="track-card-desc">
+          保健食品注册/备案所需的功效验证路径。严格遵循NMPA审评标准，为27种功能声称提供合规证据支撑。
+        </p>
+        <ul class="track-items">
+          <li><span class="icon">✓</span> AI生成NMPA审评格式方案</li>
+          <li><span class="icon">✓</span> 内置27种功能声称验证标准库</li>
+          <li><span class="icon">✓</span> 蓝帽子注册材料包一键导出</li>
+          <li><span class="icon">✓</span> 对接检测机构上门采血网络</li>
+          <li><span class="icon">✓</span> 功效验证报告+NMPA审评材料</li>
+        </ul>
+      </div>
+      <div class="track-card track-market anim-fade-up" style="--delay: 0.25s">
+        <div class="track-badge">市场循证轨</div>
+        <h3 class="track-card-title font-serif">市场循证轨</h3>
+        <p class="track-card-desc">
+          非注册用途的营销证据生成路径。灵活设计消费者感知研究、功效探索性试验，助力品牌科学背书。
+        </p>
+        <ul class="track-items">
+          <li><span class="icon">✓</span> 灵活研究设计（不受GCP严格约束）</li>
+          <li><span class="icon">✓</span> 消费者感知+功效探索+观察性研究</li>
+          <li><span class="icon">✓</span> 微信生态快速招募与数据采集</li>
+          <li><span class="icon">✓</span> 渐进路径：试点→观察→RCT</li>
+          <li><span class="icon">✓</span> 输出洞察报告+同行评审论文支持</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-tag font-sans">工作流程</div>
+  <h2 class="section-title">
+    从<span class="section-title-serif font-serif" style="color: var(--amber);">功能声称</span>到<span class="section-title-serif font-serif" style="color: var(--herb);">循证结论</span>，只需五步
+  </h2>
+  <p class="section-desc">
+    AI驱动的全流程闭环，从构想到可发表证据最快只需数周。
+  </p>
+  <div class="steps font-sans">
+    <div class="step anim-fade-up" style="--delay: 0.1s">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">AI 快速构思</div>
+        <div class="step-text">输入产品功能声称、主要成分和目标人群，AI基于中文文献+NMPA框架+中国功能声称库，即刻生成研究方案构想。</div>
+      </div>
+    </div>
+    <div class="step anim-fade-up" style="--delay: 0.15s">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">方案设计与构建</div>
+        <div class="step-text">选择合规轨道（蓝帽子/市场循证），无代码创建eConsent、量表、终点、可穿戴集成。一键导出IRB/注册审查材料。</div>
+      </div>
+    </div>
+    <div class="step anim-fade-up" style="--delay: 0.2s">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">AI招募+社区启动</div>
+        <div class="step-text">AI生成合规招募海报/文案（适配朋友圈传播），通过微信生态社区精准触达目标人群。10X更快招募。</div>
+      </div>
+    </div>
+    <div class="step anim-fade-up" style="--delay: 0.25s">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">数据采集与监控</div>
+        <div class="step-text">三层数据并行采集：问卷+华为/小米可穿戴+上门检测。24/7实时监控仪表板，双向消息系统，依从率>90%。</div>
+      </div>
+    </div>
+    <div class="step anim-fade-up" style="--delay: 0.3s">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <div class="step-title">证据输出与转化</div>
+        <div class="step-text">自动统计分析+合规报告生成。蓝帽子轨输出NMPA注册材料，市场循证轨输出消费者洞察+论文支持。参与者获个人健康回馈。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI SECTION -->
+<section class="ai-section" id="ai">
+  <div class="ai-inner">
+    <div class="ai-left">
+      <div class="section-tag font-sans" style="background: rgba(255,255,255,0.5);">AI引擎</div>
+      <h2 class="ai-title anim-fade-up" style="--delay: 0.1s">
+        <span class="font-serif">循真AI</span>：中国功效验证的智能引擎
+      </h2>
+      <p class="ai-desc anim-fade-up" style="--delay: 0.15s">
+        不是通用AI套壳。循真AI深度内置中国保健食品功能声称库、NMPA审评指南、药食同源物质清单，为中国功效验证量身打造。
+      </p>
+      <div class="ai-demo anim-fade-up" style="--delay: 0.2s">
+        <div class="ai-demo-header">
+          <div class="ai-demo-dot red"></div>
+          <div class="ai-demo-dot yellow"></div>
+          <div class="ai-demo-dot green"></div>
+        </div>
+        <div class="ai-demo-body">
+          <div class="ai-demo-prompt">
+            输入：枸杞+护眼功能+中老年人群 → 生成蓝帽子注册轨方案
+          </div>
+          <div class="ai-demo-response">
+            循真AI已为您生成完整方案：<br>
+            <span class="keyword">功能声称：</span>缓解视觉疲劳（NMPA第9类）<br>
+            <span class="keyword">研究设计：</span>随机双盲安慰剂对照试验，n=120<br>
+            <span class="keyword">终点：</span>视力表检查+泪膜破裂时间+主观疲劳量表<br>
+            <span class="keyword">合规路径：</span>蓝帽子注册轨（NMPA 2023版审评指南）<br>
+            <div class="output">已导出：功效验证报告模板 + NMPA审评材料包 + 伦理审查材料</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ai-features-list">
+      <div class="ai-feature-item anim-slide-right" style="--delay: 0.1s">
+        <div class="ai-feature-icon">🌿</div>
+        <div class="ai-feature-text">内置<strong>药食同源物质清单</strong>（101种+地方增补），自动匹配功能声称与验证标准</div>
+      </div>
+      <div class="ai-feature-item anim-slide-right" style="--delay: 0.15s">
+        <div class="ai-feature-icon">📋</div>
+        <div class="ai-feature-text">内置<strong>NMPA 27种保健功能声称</strong>验证标准库，方案设计一步合规</div>
+      </div>
+      <div class="ai-feature-item anim-slide-right" style="--delay: 0.2s">
+        <div class="ai-feature-icon">🔬</div>
+        <div class="ai-feature-text">基于<strong>中文文献数据库</strong>而非英文，研究方案立足中国循证基础</div>
+      </div>
+      <div class="ai-feature-item anim-slide-right" style="--delay: 0.25s">
+        <div class="ai-feature-icon">📱</div>
+        <div class="ai-feature-text">生成<strong>微信生态合规招募素材</strong>——朋友圈海报/社群文案/小程序落地页</div>
+      </div>
+      <div class="ai-feature-item anim-slide-right" style="--delay: 0.3s">
+        <div class="ai-feature-icon">⌚</div>
+        <div class="ai-feature-text">自动匹配<strong>中国可穿戴数据接口</strong>——华为健康Kit/小米运动API/Apple Health</div>
+      </div>
+      <div class="ai-feature-item anim-slide-right" style="--delay: 0.35s">
+        <div class="ai-feature-icon">✅</div>
+        <div class="ai-feature-text">一键导出<strong>蓝帽子注册材料包</strong>——功效验证报告+安全性评价+质量标准</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div style="text-align: center;">
+    <div class="section-tag font-sans">定价方案</div>
+    <h2 class="section-title">
+      <span class="font-serif">人人可负担</span>的循证研究
+    </h2>
+    <p class="section-desc" style="max-width: none; margin: 0 auto;">
+      拒绝"按市场承受力定价"。从¥500/月自助到全流程托管，每个品牌都能找到适合自己的循证路径。
+    </p>
+  </div>
+  <div class="pricing-cards font-sans">
+    <div class="pricing-card anim-fade-up" style="--delay: 0.1s">
+      <div class="pricing-tier">自助层</div>
+      <div class="pricing-price">¥500<span class="pricing-price-unit">/月</span></div>
+      <div class="pricing-desc">适合有in-house研究团队的成熟品牌，自己动手完成全流程</div>
+      <ul class="pricing-features">
+        <li><span class="check">✓</span> AI方案生成（双轨可选）</li>
+        <li><span class="check">✓</span> eConsent + 量表构建</li>
+        <li><span class="check">✓</span> 微信小程序参与者端</li>
+        <li><span class="check">✓</span> 问卷+可穿戴数据采集</li>
+        <li><span class="check">✓</span> 基础数据分析+报告</li>
+        <li><span class="check">✓</span> 7天免费试用</li>
+      </ul>
+      <button class="btn-primary pricing-btn primary">开始试用</button>
+    </div>
+    <div class="pricing-card popular anim-fade-up" style="--delay: 0.15s">
+      <div class="pricing-tier">辅助层</div>
+      <div class="pricing-price">¥3,000<span class="pricing-price-unit">/研究</span></div>
+      <div class="pricing-desc">适合初次做循证的品牌，平台帮你做方案、帮你找人、帮你收数据</div>
+      <ul class="pricing-features">
+        <li><span class="check">✓</span> AI方案生成+专家审核</li>
+        <li><span class="check">✓</span> 微信生态定向招募</li>
+        <li><span class="check">✓</span> 数据采集全程管理</li>
+        <li><span class="check">✓</span> 对接上门检测网络</li>
+        <li><span class="check">✓</span> 统计分析+合规报告</li>
+        <li><span class="check">✓</span> 伦理审查材料协助</li>
+      </ul>
+      <button class="btn-primary pricing-btn primary">开始验证</button>
+    </div>
+    <div class="pricing-card anim-fade-up" style="--delay: 0.2s">
+      <div class="pricing-tier">托管层</div>
+      <div class="pricing-price">¥15,000<span class="pricing-price-unit">/研究</span></div>
+      <div class="pricing-desc">适合没有研究团队的品牌，全流程托管——"扶上马送一程"</div>
+      <ul class="pricing-features">
+        <li><span class="check">✓</span> 全流程方案设计+执行</li>
+        <li><span class="check">✓</span> 伦理申报协助</li>
+        <li><span class="check">✓</span> 招募+依从性全程管理</li>
+        <li><span class="check">✓</span> 统计分析+报告撰写</li>
+        <li><span class="check">✓</span> 蓝帽子注册材料包导出</li>
+        <li><span class="check">✓</span> 论文投稿支持</li>
+      </ul>
+      <button class="pricing-btn outline">咨询详情</button>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="cta">
+  <div class="cta-inner">
+    <h2 class="cta-title anim-fade-up" style="--delay: 0.1s">
+      从<span style="color: var(--amber-light);">经验宣称</span>到<span style="color: var(--herb-glow);">科学实证</span><br>只需一个开始
+    </h2>
+    <p class="cta-desc anim-fade-up" style="--delay: 0.2s">
+      无论是蓝帽子注册所需的人体试食试验，还是市场循证的消费者感知研究，循真让每个保健品与药食同源品牌都能负担得起循证验证。
+    </p>
+    <div class="cta-actions anim-fade-up" style="--delay: 0.3s">
+      <button class="btn-white font-sans">7天免费试用</button>
+      <button class="btn-ghost font-sans">预约产品演示</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="footer-logo">循</div>
+      <div class="footer-brand-name font-serif">循真</div>
+    </div>
+    <div class="footer-links font-sans">
+      <div class="footer-col">
+        <div class="footer-col-title">产品</div>
+        <a href="#">AI方案生成</a>
+        <a href="#">双轨合规引擎</a>
+        <a href="#">微信生态社区</a>
+        <a href="#">可穿戴数据</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">服务</div>
+        <a href="#">自助SaaS</a>
+        <a href="#">研究辅助</a>
+        <a href="#">全流程托管</a>
+        <a href="#">蓝帽子注册</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">资源</div>
+        <a href="#">方案示例</a>
+        <a href="#">功能声称库</a>
+        <a href="#">药食同源清单</a>
+        <a href="#">API文档</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom font-sans">
+    <span>&copy; 2026 循真 — 消费健康循证加速器</span>
+    <span>验证版本 · 仅用于概念展示</span>
+  </div>
+</footer>
+
+<!-- SCROLL ANIMATION -->
+<script>
+// Nav scroll effect
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('nav');
+  if (window.scrollY > 60) {
+    nav.classList.add('scrolled');
+  } else {
+    nav.classList.remove('scrolled');
+  }
+});
+
+// Intersection Observer for animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.animationPlayState = 'running';
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.anim-fade-up, .anim-fade-in, .anim-slide-right').forEach(el => {
+  el.style.animationPlayState = 'paused';
+  observer.observe(el);
+});
+
+// Smooth scroll for nav links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>
+
+</body>
+</html>
